@@ -31,3 +31,28 @@ class StartStudySessionView(APIView):
             "grade": session.grade_level,
             "language": session.language
         })
+ 
+class UpdateSessionLanguageView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def patch(self, request):
+        session_id = request.data.get("session_id")
+        language = request.data.get("language")
+
+        try:
+            session = StudySession.objects.get(id=session_id)
+        except StudySession.DoesNotExist:
+            return Response({"error": "Session not found"}, status=404)
+
+        # security check
+        if session.user != request.user:
+            return Response({"error": "Unauthorized"}, status=403)
+
+        # update session language
+        session.language = language
+        session.save()
+
+        return Response({
+            "message": "Language updated",
+            "language": session.language
+        })
