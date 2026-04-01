@@ -17,13 +17,10 @@ class ChatView(APIView):
 
         # Validate session
         try:
-            session = StudySession.objects.get(id=session_id)
+            session = StudySession.objects.get(id=session_id, user=request.user)
         except StudySession.DoesNotExist:
-            return Response({"error": "Invalid session"}, status=404)
-
-        # Optional: ensure user owns session
-        if session.user != request.user:
-            return Response({"error": "Unauthorized"}, status=403)
+            return Response({"error": "Invalid session Or Unauthorized."}, status=404)
+ 
 
         # Save user message
         ChatMessage.objects.create(
@@ -31,12 +28,16 @@ class ChatView(APIView):
             sender="user",
             message=user_message
         )
+        
+        context = session.get_tutor_context()
 
         # Build smart prompt
         prompt = build_tutor_prompt(
-            subject=session.subject.name,
-            grade=session.grade_level,
-            language=session.language,
+            user_name=context['user_name'],
+            subject=context['subject'],
+            grade=context['grade'],
+            field=context['field'],
+            language=context['language'],
             user_message=user_message
         )
 

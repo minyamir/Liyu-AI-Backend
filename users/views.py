@@ -35,10 +35,7 @@ class LoginView(APIView):
             "refresh": str(refresh),
             "access": str(refresh.access_token),
         })
-
-
-from rest_framework.permissions import IsAuthenticated
-
+ 
 class SetGradeView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
@@ -49,7 +46,23 @@ class SetGradeView(APIView):
         request.user.save()
 
         return Response({"message": "Grade saved"})
-    
+ 
+
+class SetFieldView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        serializer = SetFieldSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        # only allow field selection if grade 11 or 12
+        if request.user.grade_level not in ["11", "12"]:
+            return Response({"error": "Field selection only required for grades 11 and 12"}, status=400)
+
+        request.user.study_field = serializer.validated_data["study_field"]
+        request.user.save()
+
+        return Response({"message": "Study field set successfully", "study_field": request.user.study_field})  
 
 class ProfileView(APIView):
     permission_classes = [permissions.IsAuthenticated]

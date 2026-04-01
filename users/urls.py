@@ -6,4 +6,6 @@ urlpatterns = [
     path("login/", LoginView.as_view(), name="login"),
     path("set-grade/", SetGradeView.as_view(), name="add-grade"),
     path("me/", ProfileView.as_view(), name="profiel"),
+    
+    path("set-field/", SetFieldView.as_view(), name="set-field"),
 ]

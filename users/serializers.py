@@ -28,4 +28,8 @@ class RegisterSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["id", "name", "email", "grade_level", "preferred_language"]
+        fields = ["id", "name", "email", "grade_level", "study_field", "preferred_language"]
+         
+
+class SetFieldSerializer(serializers.Serializer):
+    study_field = serializers.ChoiceField(choices=["social", "natural"])

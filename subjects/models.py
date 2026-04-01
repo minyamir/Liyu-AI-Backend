@@ -10,7 +10,19 @@ class Subject(models.Model):
         ("12", "Grade 12"),
         ("uni", "University"),
     ]
+ 
+    FIELD_CHOICES = [
+        ("social", "Social Sciences"),
+        ("natural", "Natural Sciences"),
+    ]
 
+    field = models.CharField(
+        max_length=10,
+        choices=FIELD_CHOICES,
+        null=True,
+        blank=True,
+        help_text="Subjects for specific study fields; null = common subject"
+    )
     name = models.CharField(max_length=100)
     category = models.CharField(max_length=100)  # Science, Language, etc.
     grade_level = models.CharField(max_length=10, choices=GRADE_CHOICES)

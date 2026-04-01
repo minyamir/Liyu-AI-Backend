@@ -18,18 +18,21 @@ class StartStudySessionView(APIView):
             return Response({"error": "Subject not found"}, status=404)
 
         # Create session
-        session = StudySession.objects.create(
+        session, created = StudySession.objects.get_or_create(
             user=user,
             subject=subject,
             grade_level=user.grade_level,
-            language=user.preferred_language
+            defaults={"language": user.preferred_language},
+            study_field = user.study_field,
         )
 
         return Response({
             "session_id": session.id,
             "subject": subject.name,
             "grade": session.grade_level,
-            "language": session.language
+            "feild":session.study_field,
+            "language": session.language,
+            "created": created
         })
  
 class UpdateSessionLanguageView(APIView):
@@ -38,6 +41,9 @@ class UpdateSessionLanguageView(APIView):
     def patch(self, request):
         session_id = request.data.get("session_id")
         language = request.data.get("language")
+        
+        if language not in ["en", "am"]:
+            return Response({"error": "Invalid language. Use 'en' or 'am'."}, status=400)
 
         try:
             session = StudySession.objects.get(id=session_id)

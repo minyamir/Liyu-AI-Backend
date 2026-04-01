@@ -46,6 +46,11 @@ class User(AbstractUser):
         ("uni", "University"),
     ]
 
+    FIELD_CHOICES = [
+        ("social", "Social Sciences"),
+        ("natural", "Natural Sciences"),
+    ]
+
     LANGUAGE_CHOICES = [
         ("en", "English"),
         ("am", "Amharic"),
@@ -56,6 +61,14 @@ class User(AbstractUser):
         choices=GRADE_CHOICES,
         null=True,
         blank=True
+    )
+    
+    study_field = models.CharField(
+        max_length=10,
+        choices=FIELD_CHOICES,
+        null=True,
+        blank=True,
+        help_text="Required only for grade 11 and 12"
     )
 
     preferred_language = models.CharField(
