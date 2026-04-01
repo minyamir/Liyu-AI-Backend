@@ -24,7 +24,7 @@ class LoginView(APIView):
         email = request.data.get("email")
         password = request.data.get("password")
 
-        user = authenticate(request, email=email, password=password)
+        user = authenticate(request, username=email, password=password)
 
         if user is None:
             return Response({"error": "Invalid credentials"}, status=400)

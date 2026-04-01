@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     
         # Third-party
     'rest_framework',
+    'rest_framework_simplejwt',
 
     # Our apps
     'users',
@@ -64,7 +65,8 @@ MIDDLEWARE = [
 AUTH_USER_MODEL = "users.User"
 
 AUTHENTICATION_BACKENDS = [
-    "users.backends.EmailBackend",
+    'users.backends.EmailBackend',
+    'django.contrib.auth.backends.ModelBackend',
 ]
 
 REST_FRAMEWORK = {
