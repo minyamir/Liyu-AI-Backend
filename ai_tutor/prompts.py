@@ -116,3 +116,26 @@ def build_quiz_generation_prompt(current_topic, text_slice, grade, subject):
       }}
     ]
     """
+    
+def build_summary_generation_prompt(current_topic, text_slice, grade, subject):
+    return f"""
+    You are an expert Grade {grade} {subject} tutor. 
+    Provide a high-quality academic summary of '{current_topic}' based ONLY on the text provided below.
+    
+    TEXT CONTENT:
+    {text_slice}
+    
+    FORMATTING REQUIREMENTS:
+    1. SUMMARY: Provide 3-4 detailed paragraphs explaining the core concepts.
+    2. KEY_TERMS: Identify 3-5 critical vocabulary terms and their definitions.
+    
+    OUTPUT STRUCTURE (Strict JSON):
+    {{
+      "topic": "{current_topic}",
+      "summary_text": "...",
+      "key_terms": [
+        {{"term": "...", "definition": "..."}}
+      ]
+    }}
+    """
+

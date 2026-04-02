@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'ai_tutor',
     'uploads',
     'quiz',
+    'summery',
     'progress',
 ]
 
