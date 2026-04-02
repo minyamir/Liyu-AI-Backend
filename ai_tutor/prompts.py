@@ -81,3 +81,38 @@ def build_validation_prompt(extracted_text, expected_subject, expected_grade, ex
         "feedback": "A short, helpful message in {expected_language} explaining why it was accepted or rejected."
     }}
     """
+    
+def build_topic_extraction_prompt(history_text):
+    return f"""
+    Based on the following study chat history, identify the ONE specific academic sub-topic 
+    the student is currently learning. 
+    Return ONLY the name of the topic (e.g., 'Photosynthesis', 'Linear Equations').
+    
+    CHAT HISTORY:
+    {history_text}
+    """
+
+def build_quiz_generation_prompt(current_topic, text_slice, grade, subject):
+    return f"""
+    You are a Grade {grade} {subject} teacher.
+    Create a 5-question MCQ quiz about '{current_topic}' based on the following text:
+    
+    TEXT CONTENT:
+    {text_slice}
+    
+    REQUIREMENTS:
+    - Format as a JSON list of objects ONLY.
+    - Each object must include: id, question, options (A, B, C, D), answer, and explanation.
+    - Keep the tone supportive and educational.
+
+    JSON STRUCTURE:
+    [
+      {{
+        "id": 1, 
+        "question": "...", 
+        "options": {{"A": "..", "B": "..", "C": "..", "D": ".."}}, 
+        "answer": "A", 
+        "explanation": "..."
+      }}
+    ]
+    """
