@@ -26,4 +26,5 @@ urlpatterns = [
     path('api/uploads/', include('uploads.urls')),
     path('api/quiz/', include('quiz.urls')),
     path('api/summery/', include('summery.urls')),
+    path('api/progress/', include('progress.urls')),
 ]
