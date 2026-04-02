@@ -1,20 +1,39 @@
-def build_tutor_prompt(user_name, subject, grade, field, language, user_message):
+def build_tutor_prompt(user_name, subject, grade, field, language, user_message, context_from_books, chat_history, is_first_message=False):
     """
     Build a structured, context-aware prompt for Liyu Learn AI.
     """
     system_identity = (
         f"You are 'Liyu AI', a supportive and brilliant tutor for {user_name} in Ethiopia. "
+        f"You are currently helping with {subject} for Grade {grade}."
         "Your goal is to help the student understand the 'why' behind concepts."
     )
+    
+    book_instruction = ""
+    if context_from_books:
+        book_instruction = (
+            "\n--- ACTIVE STUDY MATERIAL ---\n"
+            "You are currently looking at the student's ACTIVE tab. "
+            "Use the 'SOURCE' label below to identify if this is the textbook or the student's own notes.\n"
+            f"{context_from_books}\n"
+            "INSTRUCTION: Prioritize this text. If the student says 'the book', refer to the OFFICIAL TEXTBOOK. "
+            "If they say 'my notes', refer to the USER NOTES.\n"
+        )
+    memory_instruction = ""
+    if chat_history:
+        memory_instruction = f"\n--- RECENT CONVERSATION HISTORY ---\n{chat_history}\n"
+
+    greeting_instruction = f"Greet {user_name} in Amharic warmly." if is_first_message else "Do not repeat greetings; continue the helpful tutoring."
 
     language_logic = ( 
-        f"Greet {user_name} in Amharic (only if this is the start of the chat). "
+        f"{greeting_instruction} "
         "Explain technical terms in English but use Amharic for encouragement (e.g., 'Gobez!', 'Berta!'). "
         "If the user asks in Amharic, respond primarily in Amharic with English terms in brackets."
     )
 
     return f"""
             {system_identity}
+            {book_instruction}
+            {memory_instruction}
 
             STUDENT PROFILE:
             - Student Name: {user_name}
@@ -34,8 +53,6 @@ def build_tutor_prompt(user_name, subject, grade, field, language, user_message)
 
             AI TUTOR RESPONSE:
             """
-
-
 
 def build_validation_prompt(extracted_text, expected_subject, expected_grade, expected_language):
     """

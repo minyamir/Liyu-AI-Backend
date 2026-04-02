@@ -46,3 +46,39 @@ def validate_subject_match(text, subject, grade, language):
         print(f"Validation Parsing Error: {e}")
         # Default to True so the user isn't blocked if the AI glitches
         return {"is_match": True, "detected_subject": subject, "feedback": "Verified."}
+    
+def generate_textbook_map(extracted_text):
+    """
+    Scans the beginning of a PDF to create a Map of chapters and topics.
+    """
+    # We only need the first part of the book to find the TOC
+    toc_sample = extracted_text[:15000] 
+    
+    prompt = f"""
+    Analyze the following Table of Contents or introductory text from an Ethiopian textbook.
+    
+    TEXT:
+    \"\"\"{toc_sample}\"\"\"
+    
+    TASK:
+    Create a detailed 'Map' of this book. Identify major Chapters and the key technical terms 
+    or topics mentioned in each chapter.
+    
+    RETURN ONLY A JSON OBJECT:
+    {{
+        "chapters": [
+            {{
+                "title": "Chapter Name",
+                "keywords": ["term1", "term2", "topic3"],
+                "summary": "Brief 1-sentence description"
+            }}
+        ]
+    }}
+    """
+    raw_response = generate_ai_response(prompt)
+    try:
+        clean_json = re.sub(r'```json|```', '', raw_response).strip()
+        return clean_json # Return as string to save in TextField
+    except Exception as e:
+        print(f"Mapping Error: {e}")
+        return "{}"

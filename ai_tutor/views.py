@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-
+from uploads.models import Upload
 from studyroom.models import StudySession
 from .models import ChatMessage
 from .gemini_client import generate_ai_response
@@ -20,8 +20,46 @@ class ChatView(APIView):
             session = StudySession.objects.get(id=session_id, user=request.user)
         except StudySession.DoesNotExist:
             return Response({"error": "Invalid session Or Unauthorized."}, status=404)
- 
-
+        
+        history_objs = ChatMessage.objects.filter(session=session).order_by('-created_at')[:6]
+        is_first_message = (history_objs.count() == 0)
+        
+        chat_history_text = ""
+        for msg in reversed(history_objs):
+            role = "Student" if msg.sender == "user" else "Liyu AI"
+            chat_history_text += f"{role}: {msg.message}\n"
+            
+        
+        active_upload = Upload.objects.filter(session=session, is_active=True).first()
+        context_from_book = ""
+        
+        if active_upload and active_upload.extracted_text:
+            # --- NEW: Label the source so the AI knows what it's reading ---
+            source_label = "OFFICIAL TEXTBOOK" if active_upload.source_type == 'system' else "USER NOTES"
+            book_title = active_upload.file.name
+            
+            header = f"--- SOURCE: {source_label} ({book_title}) ---\n"
+            
+            if len(active_upload.extracted_text) < 10000:
+                context_from_book = header + active_upload.extracted_text
+            else:
+                important_keywords = [w for w in user_message.split() if len(w) > 3]
+                slice_text = ""
+                for word in important_keywords:
+                    index = active_upload.extracted_text.lower().find(word.lower())
+                    if index != -1:
+                        start = max(0, index - 1500)
+                        end = min(len(active_upload.extracted_text), index + 3500)
+                        slice_text = active_upload.extracted_text[start:end]
+                        break
+                
+                if not slice_text:
+                    slice_text = active_upload.extracted_text[:5000]
+                
+                # Combine header with the slice
+                context_from_book = header + slice_text
+        
+        
         # Save user message
         ChatMessage.objects.create(
             session=session,
@@ -38,7 +76,10 @@ class ChatView(APIView):
             grade=context['grade'],
             field=context['field'],
             language=context['language'],
-            user_message=user_message
+            user_message=user_message,
+            context_from_books=context_from_book,
+            chat_history=chat_history_text,
+            is_first_message=is_first_message
         )
 
         # Get AI response

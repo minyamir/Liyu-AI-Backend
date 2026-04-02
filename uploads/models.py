@@ -6,6 +6,15 @@ class Upload(models.Model):
     file = models.FileField(upload_to='UserPDF/') 
     file_type = models.CharField(max_length=20, blank=True)
     extracted_text = models.TextField(blank=True, null=True)
+    
+    is_active = models.BooleanField(default=False)
+    source_type = models.CharField(
+        max_length=10, 
+        choices=[('system', 'System'), ('user', 'User')], 
+        default='user'
+    )
+    table_of_contents = models.TextField(blank=True, null=True) # Stores the "Map" 
+    
     created_at = models.DateTimeField(auto_now_add=True)
     is_valid_for_subject = models.BooleanField(default=False)
     validation_feedback = models.TextField(blank=True, null=True)
