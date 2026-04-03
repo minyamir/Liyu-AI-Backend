@@ -36,6 +36,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -61,6 +62,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -68,6 +70,11 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+]
+CORS_ALLOW_CREDENTIALS = True
 AUTH_USER_MODEL = "users.User"
 
 AUTHENTICATION_BACKENDS = [
@@ -82,6 +89,16 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": (
         "rest_framework.permissions.IsAuthenticated",
     )
+}
+
+from datetime import timedelta
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60), # Access token lasts 1 hour
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),    # Refresh token lasts 7 days
+    "ROTATE_REFRESH_TOKENS": True,                 # Gives a new refresh token when used
+    "BLACKLIST_AFTER_ROTATION": True,               # Security: old refresh tokens become invalid
+    "AUTH_HEADER_TYPES": ("Bearer",),
 }
 
 ROOT_URLCONF = 'config.urls'
