@@ -49,6 +49,7 @@ class User(AbstractUser):
     FIELD_CHOICES = [
         ("social", "Social Sciences"),
         ("natural", "Natural Sciences"),
+        ("general", "General"),
     ]
 
     LANGUAGE_CHOICES = [

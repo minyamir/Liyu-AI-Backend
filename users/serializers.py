@@ -32,4 +32,4 @@ class UserSerializer(serializers.ModelSerializer):
          
 
 class SetFieldSerializer(serializers.Serializer):
-    study_field = serializers.ChoiceField(choices=["social", "natural"])
+    study_field = serializers.ChoiceField(choices=["social", "natural", "general"])

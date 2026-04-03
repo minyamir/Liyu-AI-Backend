@@ -54,12 +54,14 @@ class SetFieldView(APIView):
     def post(self, request):
         serializer = SetFieldSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-
-        # only allow field selection if grade 11 or 12
-        if request.user.grade_level not in ["11", "12"]:
-            return Response({"error": "Field selection only required for grades 11 and 12"}, status=400)
-
-        request.user.study_field = serializer.validated_data["study_field"]
+ 
+        grade = request.user.grade_level
+        
+        if grade in ["7", "8", "9", "10"]:
+            request.user.study_field = "general"
+        else: 
+            request.user.study_field = serializer.validated_data["study_field"]
+ 
         request.user.save()
 
         return Response({"message": "Study field set successfully", "study_field": request.user.study_field})  
