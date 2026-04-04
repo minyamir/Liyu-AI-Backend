@@ -34,7 +34,7 @@ DEBUG = os.getenv('DEBUG', 'False') == 'True'
 ALLOWED_HOSTS = [
     'localhost', 
     '127.0.0.1', 
-    'https://liyu-ai-backend.onrender.com' # This allows any app on Render to connect
+    'liyu-ai-backend.onrender.com' # This allows any app on Render to connect
 ]
 
 # Application definition
