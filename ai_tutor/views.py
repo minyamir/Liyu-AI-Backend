@@ -10,6 +10,33 @@ from .prompts import build_tutor_prompt
 
 class ChatView(APIView):
     permission_classes = [IsAuthenticated]
+    
+    def get(self, request):
+        # We use query_params because it's a GET request
+        session_id = request.query_params.get("session_id")
+        
+        if not session_id:
+            return Response({"error": "session_id is required"}, status=400)
+
+        try:
+            session = StudySession.objects.get(id=session_id, user=request.user)
+        except StudySession.DoesNotExist:
+            return Response({"error": "Session not found or unauthorized"}, status=404)
+
+        # Fetch all messages for this session
+        messages = ChatMessage.objects.filter(session=session).order_by('created_at')
+        
+        # Format the history for the frontend
+        history = []
+        for msg in messages:
+            history.append({
+                "id": msg.id,
+                "sender": msg.sender, # "user" or "ai"
+                "message": msg.message,
+                "timestamp": msg.created_at
+            })
+
+        return Response(history)
 
     def post(self, request):
         session_id = request.data.get("session_id")

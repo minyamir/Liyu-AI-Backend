@@ -122,20 +122,21 @@ def build_summary_generation_prompt(current_topic, text_slice, grade, subject):
     You are an expert Grade {grade} {subject} tutor. 
     Provide a high-quality academic summary of '{current_topic}' based ONLY on the text provided below.
     
-    TEXT CONTENT:
-    {text_slice}
+    TEXT CONTENT: {text_slice}
     
-    FORMATTING REQUIREMENTS:
-    1. SUMMARY: Provide 3-4 detailed paragraphs explaining the core concepts.
-    2. KEY_TERMS: Identify 3-5 critical vocabulary terms and their definitions.
-    
+    MARKDOWN REQUIREMENTS for "summary_text":
+    - Use `###` for a clear Overview header.
+    - Use **bolding** for critical concepts.
+    - Use `> ` blockquotes to highlight the most important "Golden Rule" or "Definition" from the text.
+    - Break the content into 3 scan-able sections using headers.
+    - Ensure a supportive, professional academic tone.
+
     OUTPUT STRUCTURE (Strict JSON):
     {{
       "topic": "{current_topic}",
-      "summary_text": "...",
+      "summary_text": "Markdown formatted summary here...",
       "key_terms": [
         {{"term": "...", "definition": "..."}}
       ]
     }}
     """
-
