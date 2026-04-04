@@ -78,7 +78,7 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
-    "https://liyu-aifrontend.vercel.app/", # Add your deployed frontend URL here
+    "https://liyu-aifrontend.vercel.app", # Add your deployed frontend URL here
 ]
 CORS_ALLOW_CREDENTIALS = True
 AUTH_USER_MODEL = "users.User"
