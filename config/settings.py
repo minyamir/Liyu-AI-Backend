@@ -34,7 +34,7 @@ DEBUG = os.getenv('DEBUG', 'False') == 'True'
 ALLOWED_HOSTS = [
     'localhost', 
     '127.0.0.1', 
-    '.onrender.com' # This allows any app on Render to connect
+    'https://liyu-ai-backend.onrender.com' # This allows any app on Render to connect
 ]
 
 # Application definition
@@ -78,7 +78,7 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
-    "https://appfrontend.vercel.app", # Add your deployed frontend URL here
+    "https://liyu-aifrontend.vercel.app/", # Add your deployed frontend URL here
 ]
 CORS_ALLOW_CREDENTIALS = True
 AUTH_USER_MODEL = "users.User"
@@ -136,7 +136,6 @@ WSGI_APPLICATION = 'config.wsgi.application'
 #         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
-
 
 DATABASES = {
     'default': dj_database_url.config(
