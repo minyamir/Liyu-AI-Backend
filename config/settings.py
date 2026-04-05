@@ -37,6 +37,10 @@ ALLOWED_HOSTS = [
     'liyu-ai-backend.onrender.com' # This allows any app on Render to connect
 ]
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://liyu-ai-backend.onrender.com",
+    "https://liyu-aifrontend.vercel.app",
+]
 # Application definition
 
 INSTALLED_APPS = [
