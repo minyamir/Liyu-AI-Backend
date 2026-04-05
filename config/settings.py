@@ -84,8 +84,8 @@ CORS_ALLOW_CREDENTIALS = True
 AUTH_USER_MODEL = "users.User"
 
 AUTHENTICATION_BACKENDS = [
-    'users.backends.EmailBackend',
     'django.contrib.auth.backends.ModelBackend',
+    'users.backends.EmailBackend',
 ]
 
 REST_FRAMEWORK = {
